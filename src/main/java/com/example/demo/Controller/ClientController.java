@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Client;
+import com.example.demo.Repository.ClientRepository;
 import com.example.demo.Service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.util.List;
 public class ClientController {
 
     private final ClientService clientService;
+
 
     @Autowired
     public ClientController(ClientService clientService) {

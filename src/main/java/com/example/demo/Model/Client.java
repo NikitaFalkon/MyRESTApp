@@ -1,8 +1,12 @@
 package com.example.demo.Model;
 
+import javax.persistence.*;
 
+@Entity
+@Table(name = "clients")
 public class Client {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
     private String email;
