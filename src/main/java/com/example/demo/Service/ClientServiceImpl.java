@@ -18,10 +18,11 @@ public class ClientServiceImpl implements ClientService {
 
     private static final AtomicInteger CLIENT_ID_HOLDER = new AtomicInteger();
 
-    public void create(Client client) {
+    public boolean create(Client client) {
         final int clientId = CLIENT_ID_HOLDER.incrementAndGet();
         client.setId(clientId);
         clientRepository.save(client);
+        return true;
     }
     
 
@@ -37,7 +38,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public boolean update(Client client, int id) {
-        Client client1 = clientRepository.findById(id).orElseThrow();
+        //Client client1 = clientRepository.findById(id).orElseThrow();
+        Client client1 = clientRepository.findClientById(id);
         if (client1!=null)
         {
             BeanUtils.copyProperties(client, client1, "id");
