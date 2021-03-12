@@ -26,7 +26,7 @@ public class ClientServiceImplTest extends TestCase {
         client.setName("name");
         boolean Created = clientService.create(client);
         Assert.assertTrue(Created);
-        Assert.assertNotNull(client.getName());
+        Assert.assertNotNull(client.getUsername());
     }
     @Test
     public void testFailCreate() {
@@ -34,7 +34,7 @@ public class ClientServiceImplTest extends TestCase {
         client.setName("n");
         Mockito.doReturn(new Client())
                 .when(clientRepository)
-                .findByName("u");
+                .findByUsername("u");
         boolean Created = clientService.create(client);
         Assert.assertFalse(Created);
     }
@@ -42,19 +42,19 @@ public class ClientServiceImplTest extends TestCase {
     public void testUpdate(){
         Client client = new Client();
         client.setName("name");
-        client.setId(2);
+        client.setId((long) 2);
         Mockito.doReturn(new Client())
                 .when(clientRepository)
                 .findClientById(2);
         boolean Updated = clientService.update(client, client.getId());
         Assert.assertTrue(Updated);
-        Assert.assertEquals(client.getName(), "name");
+        Assert.assertEquals(client.getUsername(), "name");
     }
     @Test
     public void testFailUpdate(){
         Client client = new Client();
         client.setName("name");
-        client.setId(2);
+        client.setId((long) 2);
         /*Mockito.doReturn(new Client())
                 .when(clientRepository)
                 .findClientById(3);*/
@@ -65,7 +65,7 @@ public class ClientServiceImplTest extends TestCase {
     public void testDelete(){
         Client client = new Client();
         client.setName("name");
-        client.setId(2);
+        client.setId((long) 2);
         Mockito.doReturn(new Client())
                 .when(clientRepository)
                 .findClientById(2);

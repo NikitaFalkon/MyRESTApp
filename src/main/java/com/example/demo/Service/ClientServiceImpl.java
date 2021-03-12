@@ -4,22 +4,25 @@ import com.example.demo.Model.Client;
 import com.example.demo.Repository.ClientRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class ClientServiceImpl implements ClientService {
+public class ClientServiceImpl implements ClientService, UserDetailsService {
     @Autowired
     private ClientRepository clientRepository;
 
     //private static final Map<Integer, Client> CLIENT_REPOSITORY_MAP = new HashMap<>();
 
-    private static final AtomicInteger CLIENT_ID_HOLDER = new AtomicInteger();
+    private long CLIENT_ID_HOLDER;
 
     public boolean create(Client client) {
-        final int clientId = CLIENT_ID_HOLDER.incrementAndGet();
+        final long clientId = ++CLIENT_ID_HOLDER;
         client.setId(clientId);
         clientRepository.save(client);
         return true;
@@ -32,12 +35,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client read(int id) {
+    public Client read(long id) {
         return clientRepository.findById(id).orElseThrow();
     }
 
     @Override
-    public boolean update(Client client, int id) {
+    public boolean update(Client client, long id) {
         //Client client1 = clientRepository.findById(id).orElseThrow();
         Client client1 = clientRepository.findClientById(id);
         if (client1!=null)
@@ -50,8 +53,22 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         clientRepository.deleteById(id);
         return true;
+    }
+    public boolean deleteAll() {
+        clientRepository.deleteAll();
+        return true;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        Client client1 = clientRepository.findByUsername(s);
+        if (client1!=null)
+        {
+            return client1;
+        }
+        return null;
     }
 }
