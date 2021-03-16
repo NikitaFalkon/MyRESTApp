@@ -5,6 +5,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "clients")
@@ -14,9 +16,11 @@ public class Client implements UserDetails {
     private Long id;
     private String username;
     private String password;
-    private String email;
-    private String phone;
-    private String role = "ADMIN";
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
 
     public Long getId() {
@@ -27,24 +31,8 @@ public class Client implements UserDetails {
         this.id = id;
     }
 
-    public void setName(String name) {
+    public void setUsername(String name) {
         this.username = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     @Override
@@ -84,5 +72,13 @@ public class Client implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
     }
 }
